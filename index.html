@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Wild Console — 24 Animal Events</title>
+  <style>
+    :root{--bg:#0f1724;--card:#0b1220;--accent:#ffd166;--muted:#94a3b8}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,#071024 0%, #0f1724 100%);color:#e6eef8;min-height:100vh;display:flex;flex-direction:column}
+    header{padding:18px 20px;display:flex;align-items:center;gap:16px}
+    .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,#0ea5a4,#7c3aed);display:flex;align-items:center;justify-content:center;font-weight:700; font-size:20px}
+    h1{font-size:18px;margin:0}
+    p.lead{margin:4px 0 0;color:var(--muted);font-size:13px}
+    .controls{margin-left:auto;display:flex;gap:8px;align-items:center}
+    button{background:transparent;border:1px solid rgba(255,255,255,0.06);color:inherit;padding:8px 12px;border-radius:10px;cursor:pointer}
+    button.primary{background:var(--accent);color:#071024;border:none}
+
+    main{padding:18px}
+    .console{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column;gap:8px;min-height:120px}
+    .animal{display:flex;align-items:center;gap:10px}
+    .emoji{font-size:34px;width:52px;height:52px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:center}
+    .name{font-weight:700}
+    .meta{font-size:13px;color:var(--muted)}
+    .actions{display:flex;gap:8px;margin-top:auto}
+    .actions button{flex:1}
+    .selected{outline:3px solid rgba(255,209,102,0.12);box-shadow:0 6px 18px rgba(0,0,0,0.45)}
+
+    .panel{margin-top:18px;background:rgba(255,255,255,0.02);padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+    .row{display:flex;gap:8px;align-items:center}
+    .small{font-size:13px;color:var(--muted)}
+
+    .modal{position:fixed;inset:0;background:rgba(2,6,23,0.6);display:none;align-items:center;justify-content:center}
+    .modal.open{display:flex}
+    .modal-card{background:#071225;padding:16px;border-radius:12px;width:min(720px,96%);border:1px solid rgba(255,255,255,0.04)}
+    input,textarea,select{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+    .flex{display:flex;gap:8px}
+
+    footer{padding:12px 18px;color:var(--muted);font-size:13px}
+
+    @media (max-width:520px){.emoji{font-size:28px;width:44px;height:44px}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">WC</div>
+    <div>
+      <h1>Wild Console — 24 Animal Events</h1>
+      <p class="lead">Interactive event console. 24 animal tiles — click to trigger events, random draw, or run a sequence.</p>
+    </div>
+    <div class="controls">
+      <button id="shuffleBtn">Random Pick</button>
+      <button id="startSeq">Start Sequence</button>
+      <button class="primary" id="adminBtn">Edit Events</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="console" id="console"></section>
+
+    <div class="panel">
+      <div class="row" style="justify-content:space-between;align-items:center">
+        <div>
+          <div class="small">Selected events: <span id="count">0</span></div>
+          <div class="small">Last picked: <span id="last">—</span></div>
+        </div>
+        <div class="flex">
+          <button id="clearSel">Clear Selection</button>
+          <button id="exportBtn">Export JSON</button>
+          <button id="importBtn">Import JSON</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <div class="modal" id="modal">
+    <div class="modal-card">
+      <h3>Edit Events (24)</h3>
+      <p class="small">Click a tile to edit its title/description/emoji. When finished, click Save.</p>
+      <div id="editorList" style="max-height:420px;overflow:auto;margin-top:10px"></div>
+      <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-end">
+        <button id="modalClose">Close</button>
+        <button id="modalSave" class="primary">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <input type="file" id="fileInput" style="display:none" accept="application/json" />
+
+  <footer>
+    Built for quick events: uses localStorage. Edit tile data, export/import JSON for reuse. Need images? swap the emoji field for image URLs in the JSON.
+  </footer>
+
+  <script>
+    const defaultEvents = [
+      {id:1, emoji:'🦁', name:'Lion Roar', desc:'King of the savannah emerges.'},
+      {id:2, emoji:'🐘', name:'Elephant Parade', desc:'A majestic elephant passes by.'},
+      {id:3, emoji:'🦒', name:'Giraffe Watch', desc:'Treetop browsing giraffe.'},
+      {id:4, emoji:'🦓', name:'Zebra Crossing', desc:'Striped gallop across plains.'},
+      {id:5, emoji:'🦛', name:'Hippo Splash', desc:'Hippopotamus in the river.'},
+      {id:6, emoji:'🦏', name:'Rhino Charge', desc:'A rhino stomps nearby.'},
+      {id:7, emoji:'🐆', name:'Leopard Stalk', desc:'Silent hunter in the grass.'},
+      {id:8, emoji:'🐅', name:'Tiger Prowl', desc:'A rare tiger passage.'},
+      {id:9, emoji:'🐊', name:'Crocodile Basking', desc:'Crocodile on the riverbank.'},
+      {id:10, emoji:'🦌', name:'Deer Herd', desc:'A herd grazes peacefully.'},
+      {id:11, emoji:'🦨', name:'Skunk Alert', desc:'A skunk raises its tail.'},
+      {id:12, emoji:'🐋', name:'Whale Song', desc:'A distant whale sings.'},
+      {id:13, emoji:'🦅', name:'Eagle Dive', desc:'A raptor swoops down.'},
+      {id:14, emoji:'🦢', name:'Swan Glide', desc:'Swan glides on a lake.'},
+      {id:15, emoji:'🦉', name:'Owl Hoot', desc:'Night-time owl hoot.'},
+      {id:16, emoji:'🦩', name:'Flamingo Stand', desc:'Flamingos stand on one leg.'},
+      {id:17, emoji:'🦧', name:'Orangutan Swing', desc:'A nimble ape swings.'},
+      {id:18, emoji:'🐆', name:'Cheetah Sprint', desc:'Fastest land animal sprint.'},
+      {id:19, emoji:'🐻', name:'Bear Forage', desc:'Bear searches for food.'},
+      {id:20, emoji:'🐺', name:'Wolf Pack', desc:'Wolves howl at night.'},
+      {id:21, emoji:'🦥', name:'Sloth Rest', desc:'Slow and steady rest.'},
+      {id:22, emoji:'🦈', name:'Shark Patrol', desc:'Shark circles below.'},
+      {id:23, emoji:'🐆', name:'Panther Shade', desc:'A black panther in shadow.'},
+      {id:24, emoji:'🦦', name:'Otter Play', desc:'Otters play in the stream.'}
+    ];
+
+    let events = JSON.parse(localStorage.getItem('wild_events_v1')) || defaultEvents;
+    const consoleEl = document.getElementById('console');
+    const countEl = document.getElementById('count');
+    const lastEl = document.getElementById('last');
+
+    function render() {
+      consoleEl.innerHTML = '';
+      events.forEach(e => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.dataset.id = e.id;
+        card.innerHTML = `
+          <div class="animal">
+            <div class="emoji">${e.emoji || '❓'}</div>
+            <div>
+              <div class="name">${escapeHtml(e.name)}</div>
+              <div class="meta">${escapeHtml(e.desc)}</div>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="pick">Pick</button>
+            <button class="toggle">Toggle</button>
+          </div>
+        `;
+
+        card.querySelector('.pick').addEventListener('click', () => pickEvent(e.id));
+        card.querySelector('.toggle').addEventListener('click', () => toggleSelect(card));
+        consoleEl.appendChild(card);
+      });
+      updateCount();
+    }
+
+    function escapeHtml(s){return (s||'').toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+    function pickEvent(id){
+      const ev = events.find(x=>x.id===id);
+      if(!ev) return;
+      lastEl.textContent = ev.name;
+      const node = [...consoleEl.children].find(c=>c.dataset.id==id);
+      if(node){
+        node.classList.add('selected');
+        setTimeout(()=>node.classList.remove('selected'),1200);
+      }
+    }
+
+    function toggleSelect(card){
+      card.classList.toggle('selected');
+      updateCount();
+    }
+
+    function updateCount(){
+      const n = [...consoleEl.children].filter(c=>c.classList.contains('selected')).length;
+      countEl.textContent = n;
+    }
+
+    document.getElementById('shuffleBtn').addEventListener('click', ()=>{
+      const rand = events[Math.floor(Math.random()*events.length)];
+      pickEvent(rand.id);
+    });
+
+    render();
+  </script>
+</body>
+</html>
