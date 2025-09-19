@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wild Console 24</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f0f0f0; margin: 0; padding: 20px; text-align: center; }
+    h1 { margin-bottom: 20px; }
+    .grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 15px; justify-items: center; }
+    .tile { background: white; border-radius: 12px; padding: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); width: 120px; cursor: pointer; transition: transform 0.2s; }
+    .tile:hover { transform: scale(1.05); }
+    .tile img { width: 100%; height: 100px; object-fit: cover; border-radius: 8px; }
+    .tile-name { margin-top: 8px; font-weight: bold; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <h1>Wild Console 24</h1>
+  <div class="grid">
+    <div class="tile"><img src="https://upload.wikimedia.org/wikipedia/commons/7/73/Lion_waiting_in_Namibia.jpg"><div class="tile-name">Lion</div></div>
+    <div class="tile"><img src="https://upload.wikimedia.org/wikipedia/commons/3/37/African_Bush_Elephant.jpg"><div class="tile-name">Elephant</div></div>
+    <div class="tile"><img src="https://upload.wikimedia.org/wikipedia/commons/9/9f/Giraffe_standing.jpg"><div class="tile-name">Giraffe</div></div>
+    <div class="tile"><img src="https://upload.wikimedia.org/wikipedia/commons/0/0f/Plains_Zebra_Equus_quagga.jpg"><div class="tile-name">Zebra</div></div>
+    <div class="tile"><img src="https://upload.wikimedia.org/wikipedia/commons/f/fc/African_leopard.jpg"><div class="tile-name">Leopard</div></div>
+    <div class="tile"><img src="https://upload.wikimedia.org/wikipedia/commons/0/0c/AfricanBuffalo.jpg"><div class="tile-name">Buffalo</div></div>
+    <div class="tile"><img src="https://upload.wikimedia.org/wikipedia/commons/1/17/Rhinoceros_in_South_Africa_cropped.jpg"><div class="tile-name">Rhino</div></div>
+    <div class="tile"><img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Hippopotamus_in_South_Africa.jpg"><div class="tile-name">Hippo</div></div>
+    <div class="tile"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Cheetah_%28Acinonyx_jubatus%29.jpg"><div class="tile-name">Cheetah</div></div>
+    <div class="tile"><img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Spotted_Hyena_in_the_Masai_Mara.jpg"><div class="tile-name">Hyena</div></div>
+    <div class="tile"><img src="https://upload.wikimedia.org/wikipedia/commons/f/f6/NileCrocodile.jpg"><div class="tile-name">Crocodile</div></div>
+    <div class="tile"><img src="https://upload.wikimedia.org/wikipedia/commons/1/1d/Ostrich_male_RWD.jpg"><div class="tile-name">Ostrich</div></div>
+    <div class="tile"><img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Impala_Aepyceros_melampus_male.jpg"><div class="tile-name">Antelope</div></div>
+    <div class="tile"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Gorilla_gorilla_-Buffalo_Zoo.jpg"><div class="tile-name">Gorilla</div></div>
+    <div class="tile"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a1/Chimpanzee-Head.jpg"><div class="tile-name">Chimpanzee</div></div>
+    <div class="tile"><img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Baboon_side_view.jpg"><div class="tile-name">Baboon</div></div>
+    <div class="tile"><img src="https://upload.wikimedia.org/wikipedia/commons/3/36/Lesser_Flamingo_in_flight.jpg"><div class="tile-name">Flamingo</div></div>
+    <div class="tile"><img src="https://upload.wikimedia.org/wikipedia/commons/0/0c/African_Rock_Python.jpg"><div class="tile-name">Python</div></div>
+    <div class="tile"><img src="https://upload.wikimedia.org/wikipedia/commons/0/0f/Warthog_in_Ngorongoro.jpg"><div class="tile-name">Warthog</div></div>
+    <div class="tile"><img src="https://upload.wikimedia.org/wikipedia/commons/7/73/Wildebeest_Ngorongoro.jpg"><div class="tile-name">Wildebeest</div></div>
+    <div class="tile"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3d/Grant%27s_Gazelle.jpg"><div class="tile-name">Gazelle</div></div>
+    <div class="tile"><img src="https://upload.wikimedia.org/wikipedia/commons/0/0f/Pangolin.jpg"><div class="tile-name">Pangolin</div></div>
+    <div class="tile"><img src="https://upload.wikimedia.org/wikipedia/commons/8/8b/Porcupine_in_forest.jpg"><div class="tile-name">Porcupine</div></div>
+    <div class="tile"><img src="https://upload.wikimedia.org/wikipedia/commons/2/29/Golden_jackal.jpg"><div class="tile-name">Jackal</div></div>
+  </div>
+</body>
+</html>
